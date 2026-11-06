@@ -1,7 +1,30 @@
 "use client";
 
-import { Minus, Plus } from "lucide-react";
+import { LoaderCircle, Minus, Plus } from "lucide-react";
+import { useFormStatus } from "react-dom";
 import { adjustStockAction } from "@/lib/actions/products";
+
+function StockButton({ children, disabled = false, label }) {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      aria-busy={pending}
+      aria-label={label}
+      className="button button-secondary button-small"
+      disabled={disabled || pending}
+      style={{ width: 28, height: 28, minHeight: 28, padding: 0 }}
+      title={label}
+      type="submit"
+    >
+      {pending ? (
+        <LoaderCircle aria-hidden="true" className="auth-spinner" size={13} />
+      ) : (
+        children
+      )}
+    </button>
+  );
+}
 
 export function StockAdjuster({ id, quantity }) {
   return (
@@ -9,16 +32,9 @@ export function StockAdjuster({ id, quantity }) {
       <form action={adjustStockAction} style={{ display: "inline" }}>
         <input name="id" type="hidden" value={id} />
         <input name="delta" type="hidden" value="-1" />
-        <button
-          aria-label="Decrease stock by 1"
-          className="button button-secondary button-small"
-          disabled={quantity <= 0}
-          style={{ width: 24, height: 24, minHeight: 24, padding: 0 }}
-          title="Decrease stock by 1"
-          type="submit"
-        >
+        <StockButton disabled={quantity <= 0} label="Decrease stock by 1">
           <Minus aria-hidden="true" size={12} />
-        </button>
+        </StockButton>
       </form>
 
       <span className="mono" style={{ minWidth: 28, textAlign: "center", fontWeight: 600 }}>
@@ -28,15 +44,9 @@ export function StockAdjuster({ id, quantity }) {
       <form action={adjustStockAction} style={{ display: "inline" }}>
         <input name="id" type="hidden" value={id} />
         <input name="delta" type="hidden" value="1" />
-        <button
-          aria-label="Increase stock by 1"
-          className="button button-secondary button-small"
-          style={{ width: 24, height: 24, minHeight: 24, padding: 0 }}
-          title="Increase stock by 1"
-          type="submit"
-        >
+        <StockButton label="Increase stock by 1">
           <Plus aria-hidden="true" size={12} />
-        </button>
+        </StockButton>
       </form>
     </div>
   );

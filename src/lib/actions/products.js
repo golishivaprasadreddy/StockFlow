@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
@@ -156,7 +157,7 @@ export async function adjustStockAction(formData) {
   const id = String(formData.get("id") ?? "");
   const delta = Number(formData.get("delta") ?? 0);
 
-  if (!id || Number.isNaN(delta)) {
+  if (!id || ![-1, 1].includes(delta)) {
     productRedirect("/products", "Invalid stock adjustment.");
   }
 
@@ -174,18 +175,28 @@ export async function adjustStockAction(formData) {
     productRedirect("/products", "Product not found.");
   }
 
-  const newQuantity = Math.max(0, product.quantity_on_hand + delta);
+  const currentQuantity = Number(product.quantity_on_hand);
+  if (!Number.isSafeInteger(currentQuantity) || currentQuantity < 0) {
+    productRedirect("/products", "The current stock quantity is invalid.");
+  }
+  const newQuantity = currentQuantity + delta;
+  if (newQuantity < 0) {
+    productRedirect("/products", "Stock quantity cannot be less than zero.");
+  }
 
-  const { error: updateError } = await supabase
+  const { data: updatedProduct, error: updateError } = await supabase
     .from("products")
     .update({ quantity_on_hand: newQuantity })
     .eq("id", id)
-    .eq("organization_id", organization.id);
+    .eq("organization_id", organization.id)
+    .select("id")
+    .maybeSingle();
 
-  if (updateError) {
+  if (updateError || !updatedProduct) {
     productRedirect("/products", "Could not adjust stock.");
   }
 
+  revalidatePath("/products");
   redirect("/products?notice=Stock%20level%20updated.");
 }
 

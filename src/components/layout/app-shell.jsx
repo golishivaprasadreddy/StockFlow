@@ -7,7 +7,6 @@ import {
   Menu,
   Settings,
 } from "lucide-react";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -66,14 +65,6 @@ export function AppShell({ children, user }) {
       />
       <aside className="sidebar" data-open={menuOpen}>
         <a aria-label="StockFlow home" className="brand" href="/dashboard">
-          <Image
-            alt=""
-            className="brand-image"
-            height={30}
-            priority
-            src="/stockflow-mark.svg"
-            width={30}
-          />
           <span>StockFlow</span>
         </a>
 
@@ -118,14 +109,6 @@ export function AppShell({ children, user }) {
             <Menu aria-hidden="true" size={19} />
           </button>
           <a aria-label="StockFlow dashboard" className="mobile-brand" href="/dashboard">
-            <Image
-              alt=""
-              className="brand-image brand-image-small"
-              height={26}
-              priority
-              src="/stockflow-mark.svg"
-              width={26}
-            />
             StockFlow
           </a>
           <span className="topbar-title">

@@ -1,6 +1,5 @@
-import { ArrowRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
+import { AuthSubmitButton } from "@/components/auth/auth-submit-button";
 import { signupAction } from "@/lib/actions/auth";
 import { getSupabaseEnv } from "@/lib/supabase/env";
 
@@ -14,14 +13,6 @@ export default async function SignupPage({ searchParams }) {
     <main className="auth-page">
       <aside className="auth-aside">
         <Link aria-label="StockFlow home" className="brand" href="/">
-          <Image
-            alt=""
-            className="brand-image"
-            height={30}
-            priority
-            src="/stockflow-mark.svg"
-            width={30}
-          />
           <span>StockFlow</span>
         </Link>
         <div className="auth-aside-copy">
@@ -104,9 +95,11 @@ export default async function SignupPage({ searchParams }) {
                 type="password"
               />
             </div>
-            <button className="button button-primary auth-submit" disabled={!configured}>
-              Create account <ArrowRight aria-hidden="true" size={15} />
-            </button>
+            <AuthSubmitButton
+              configured={configured}
+              label="Create account"
+              pendingLabel="Creating account..."
+            />
           </form>
           <p className="auth-footnote">
             Already have an account? <Link href="/login">Sign in</Link>

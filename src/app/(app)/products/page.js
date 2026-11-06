@@ -1,4 +1,4 @@
-import { Boxes, Download, Plus, Search, Upload, X } from "lucide-react";
+import { Boxes, Download, Info, Plus, Search, Upload, X } from "lucide-react";
 import Link from "next/link";
 import { DeleteProductButton } from "@/components/products/delete-product-button";
 import { StockAdjuster } from "@/components/products/stock-adjuster";
@@ -131,6 +131,12 @@ export default async function ProductsPage({ searchParams }) {
               Download CSV
             </Link>
           </div>
+          <p className="csv-format-note" role="note">
+            <Info aria-hidden="true" size={15} />
+            <span>
+              For uploads, use this CSV format. Download a file here and follow its column format.
+            </span>
+          </p>
         </div>
 
         {products.length === 0 ? (
