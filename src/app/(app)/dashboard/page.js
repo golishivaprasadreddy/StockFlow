@@ -130,13 +130,14 @@ export default async function DashboardPage() {
                         organization.default_low_stock_threshold}
                     </td>
                     <td>
-                      <Link
+{/*                 <Link
                         aria-label={`Edit र{product.name}`}
-                        className="inline-link"
+                     className="inline-link"
                         href={`/products/र{product.id}/edit`}
                       >
                         Review
                       </Link>
+*/}
                     </td>
                   </tr>
                 ))}
